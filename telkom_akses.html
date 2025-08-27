@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard B2C HI Cilegon</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+            margin: 0;
+        }
+        .kpi-card-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            color: #333;
+        }
+        .card-header-top {
+            background-color: #003366;
+            color: white;
+            padding: 20px 25px;
+            text-align: center;
+        }
+        .card-header-top h2 {
+            margin: 0 0 5px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .card-header-top p {
+            margin: 0;
+            font-size: 15px;
+            color: #bdc3c7;
+        }
+        .card-section {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .card-section:last-of-type {
+            border-bottom: none;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #444;
+            text-transform: uppercase;
+            margin: 0 0 15px 0;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+        .metrics-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .metrics-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 16px;
+        }
+        .metric-label {
+            color: #666;
+            flex-basis: 70%;
+        }
+        .metric-value {
+            font-weight: bold;
+            color: #333;
+            text-align: right;
+            flex-basis: 30%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="kpi-card-wrapper">
+        <div class="kpi-card">
+            <div class="card-header-top">
+                <h2 id="report-title">Memuat Judul...</h2>
+                <p id="report-subtitle">Memuat Sektor...</p>
+                <p id="timestamp" style="font-size: 12px; margin-top: 10px; color: #99aab5;">Terakhir Update: ...</p>
+            </div>
+
+            <div class="card-section">
+                <h3 class="section-title">STATUS TEKNISI</h3>
+                <ul class="metrics-list">
+                    <li><span class="metric-label">TOTAL TEKNISI :</span><span class="metric-value" id="totalteknisi">...</span></li>
+                    <li><span class="metric-label">MASUK HI :</span><span class="metric-value" id="masukhi">...</span></li>
+                    <li><span class="metric-label">LIBUR HI :</span><span class="metric-value" id="liburhi">...</span></li>
+                    <li><span class="metric-label">SIFTING :</span><span class="metric-value" id="sifting">...</span></li>
+                </ul>
+            </div>
+            
+            <div class="card-section">
+                <h3 class="section-title">PROGRES TIKET IOAN HI</h3>
+                <ul class="metrics-list">
+                    <li><span class="metric-label">JUMLAH TIKET :</span><span class="metric-value" id="jumlahtiket">...</span></li>
+                    <li><span class="metric-label">SISA OPEN :</span><span class="metric-value" id="sisaopen">...</span></li>
+                    <li><span class="metric-label">JUMLAH CLOSE :</span><span class="metric-value" id="jumlahclose">...</span></li>
+                </ul>
+            </div>
+            
+            <div class="card-section">
+                <h3 class="section-title">DETAIL TIKET</h3>
+                <ul class="metrics-list">
+                    <li><span class="metric-label">SISA TIKET REGULER :</span><span class="metric-value" id="sisatiketreguler">...</span></li>
+                    <li><span class="metric-label">TIKET CLOSE REGULER :</span><span class="metric-value" id="tiketclosereguler">...</span></li>
+                    <li><span class="metric-label">SISA TIKET SQM :</span><span class="metric-value" id="sisatiketsqm">...</span></li>
+                    <li><span class="metric-label">TIKET CLOSE SQM :</span><span class="metric-value" id="tiketclosesqm">...</span></li>
+                    <li><span class="metric-label">SISA TIKET PRA SQM :</span><span class="metric-value" id="sisatiketprasqm">...</span></li>
+                    <li><span class="metric-label">TIKET CLOSE PRA SQM :</span><span class="metric-value" id="tiketcloseprasqm">...</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSboKcmC0T1V9SY6BOlIIKnbl4XMSMJutHdhLcB7rTe0mdTxf0z3XIvPUEdVGEzIcmEchWzwTF2bVay/pub?gid=1579015618&single=true&output=csv';
+
+        function cleanLabelForId(label) {
+            return label.toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch(googleSheetCsvUrl);
+                if (!response.ok) throw new Error('Gagal mengambil data CSV.');
+                const csvData = await response.text();
+                
+                const lines = csvData.trim().split('\n');
+                const headers = lines.shift().split(',');
+
+                lines.forEach(line => {
+                    const values = line.split(',');
+                    const section = values[0].trim();
+                    const label = values[1].trim();
+                    const value = values[2] ? values[2].trim() : ''; // Ambil nilai dari kolom ke-3
+
+                    // === PERBAIKAN LOGIKA DI SINI ===
+                    if (section === 'HEADER') {
+                        // Untuk baris HEADER, nilai yang ingin ditampilkan ada di kolom kedua (label)
+                        if (label.toUpperCase().includes('REPORT')) {
+                            document.getElementById('report-title').textContent = label;
+                        } else if (label.toUpperCase().includes('SEKTOR')) {
+                            document.getElementById('report-subtitle').textContent = label;
+                        }
+                    } else {
+                        // Untuk baris data lainnya, nilai ada di kolom ketiga (value)
+                        const elementId = cleanLabelForId(label);
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            element.textContent = value;
+                        }
+                    }
+                });
+
+                const now = new Date();
+                document.getElementById('timestamp').textContent = 'Terakhir Update: ' + now.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+
+            } catch (error) {
+                console.error('Error saat update dashboard:', error);
+                document.getElementById('report-title').textContent = 'Gagal Memuat Data!';
+                document.getElementById('report-subtitle').textContent = 'Periksa koneksi atau link CSV.';
+                const metricValues = document.querySelectorAll('.metric-value');
+                metricValues.forEach(el => el.textContent = 'Error!');
+            }
+        }
+
+        window.onload = updateDashboard;
+        setInterval(updateDashboard, 300000);
+    </script>
+</body>
+</html>
