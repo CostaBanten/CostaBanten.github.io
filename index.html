@@ -1,88 +1,108 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Performance Dashboard</title>
+    <title>Login Page</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
+            margin: 0;
             display: flex;
+            flex-direction: column; /* Mengatur item secara vertikal */
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
+            
+            /* --- CSS BACKGROUND YANG DIUBAH --- */
+            background-color: #e0eafc; /* Warna dasar yang sama dengan dashboard */
+            background-image: url('pattern.png'); /* Gambar pattern yang sama */
+            background-repeat: repeat; /* Ulangi gambar */
         }
-        .login-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 100%;
-            max-width: 350px;
-        }
-        h2 {
+        
+        h1.main-title {
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 40px; /* Jarak antara judul dan kotak login */
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 10px;
         }
-        input[type="password"] {
+
+        .login-container {
+            width: 350px;
+            padding: 30px;
+            background-color: #3B596A;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .login-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
             width: calc(100% - 20px);
             padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
             border-radius: 5px;
         }
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background-color: #003366;
+        .login-container button {
+            background-color: #60d49a;
             color: white;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 12px 20px;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            width: 100%;
+            font-size: 16px;
         }
-        button:hover {
-            background-color: #0055a4;
+
+        .login-title {
+            color: #FFFFFF; /* Ganti dengan kode warna yang Anda inginkan */
+            margin-bottom: 25px; /* Memberi jarak ke form di bawahnya */
+            font-size: 20px; /* Mengatur ukuran font */
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Costa Banten</h2>
-        <input type="password" id="password" placeholder="Masukkan Kata Sandi">
-        <button onclick="checkPassword()">Masuk</button>
+
+        <h2 class="login-title">Monitoring Costa Banten</h2>
+        <form id="loginForm">
+            <div>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+        </form>
     </div>
 
     <script>
-        function checkPassword() {
-            // --- GANTI KATA SANDI DI SINI ---
-            const correctPassword = "costa22"; 
-            
-            // Mengambil nilai yang diketik pengguna
-            const enteredPassword = document.getElementById("password").value;
-
-            // Memeriksa apakah kata sandi cocok
-            if (enteredPassword === correctPassword) {
-                // Jika benar, arahkan ke halaman dasbor utama
-                window.location.href = "dashboard.html"; 
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+            const correctUsername = "1212";
+            const correctPassword = "1212";
+            if (usernameInput === correctUsername && passwordInput === correctPassword) {
+                alert('Login Berhasil!');
+                window.location.href = 'dashboard.html';
             } else {
-                // Jika salah, tampilkan pesan error
-                alert("Kata Sandi Salah!");
-            }
-        }
-
-        // Menambahkan event listener agar bisa menekan "Enter"
-        document.getElementById("password").addEventListener("keyup", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                checkPassword();
+                alert('Username atau Password salah!');
             }
         });
     </script>
+
 </body>
 </html>
