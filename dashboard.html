@@ -83,11 +83,12 @@
         }
         /* === PENGATURAN UTAMA ADA DI SINI === */
         .iframe-container {
-            width: 100%;
+            width: 70%;
             height: 250px; /* <-- UBAH ANGKA INI UNTUK MENGATUR TINGGI SEMUA DASBOR */
             overflow: hidden;
             border: none;
             margin-bottom: 16px; /* Ini adalah jarak "1 spasi" antar dasbor */
+            display: inline-block;
         }
         .g-sheet-iframe {
             width: 100%;
@@ -133,82 +134,94 @@
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Logika untuk membuka/menutup dropdown
-            const dropdownToggles = document.querySelectorAll('.dropdown > a');
-            dropdownToggles.forEach(toggle => {
-                toggle.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    let submenu = this.nextElementSibling;
-                    document.querySelectorAll('.submenu.show').forEach(openSubmenu => {
-                        if (openSubmenu !== submenu) { openSubmenu.classList.remove('show'); }
-                    });
-                    submenu.classList.toggle('show');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Logika untuk membuka/menutup dropdown (Tidak Berubah)
+        const dropdownToggles = document.querySelectorAll('.dropdown > a');
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(event) {
+                event.stopPropagation();
+                let submenu = this.nextElementSibling;
+                document.querySelectorAll('.submenu.show').forEach(openSubmenu => {
+                    if (openSubmenu !== submenu) { openSubmenu.classList.remove('show'); }
                 });
+                submenu.classList.toggle('show');
             });
+        });
 
-            // --- Logika Utama untuk Memuat Konten ---
-            
-            // 1. Definisikan semua URL dashboard Anda di dalam daftar ini
-            const dashboardUrls = [
-                "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=AE1:BI20&rm=minimal",
-                "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=BK1:BV19&rm=minimal",
-                "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=A2:C35&rm=minimal"
-                // Tambahkan URL lain di sini jika perlu
-            ];
+        // --- Logika Utama untuk Memuat Konten ---
 
-            const contentDisplay = document.getElementById('content-display');
-            const navLinks = document.querySelectorAll('.nav-link');
-            const defaultContent = contentDisplay.innerHTML;
+        // 1. Definisikan URL dan TINGGI untuk setiap dasbor di sini
+        const dashboards = [
+            { 
+                url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=AE1:BI20&rm=minimal", 
+                height: 350 // Atur tinggi untuk dasbor pertama
+            },
+            { 
+                url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=BK1:BV19&rm=minimal", 
+                height: 250 // Atur tinggi untuk dasbor kedua
+            },
+            { 
+                url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=A2:C35&rm=minimal", 
+                height: 250 // Atur tinggi untuk dasbor ketiga
+            }
+        ];
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
+        const contentDisplay = document.getElementById('content-display');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const defaultContent = contentDisplay.innerHTML;
 
-                    // Cek apakah yang diklik adalah link dashboard utama
-                    if (this.id === 'dashboard-link') {
-                        let htmlToDisplay = ''; 
-                        
-                        // Loop melalui setiap URL dalam daftar dashboardUrls
-                        dashboardUrls.forEach(url => {
-                            if (url.startsWith('http')) {
-                                htmlToDisplay += `
-                                    <div class="iframe-container">
-                                        <iframe class="g-sheet-iframe" src="${url}"></iframe>
-                                    </div>
-                                `;
-                            }
-                        });
-                        contentDisplay.innerHTML = htmlToDisplay;
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
 
-                    } else { // Jika link lain yang diklik
-                        const url = this.getAttribute('data-src');
-                        if (url && url.startsWith('http')) {
-                            contentDisplay.innerHTML = `
-                                <div class="iframe-container">
-                                    <iframe class="g-sheet-iframe" src="${url}"></iframe>
-                                </div>`;
-                        } else {
-                            // Kembalikan ke tampilan awal jika URL tidak valid
-                            contentDisplay.innerHTML = defaultContent;
+                // Cek apakah yang diklik adalah link dashboard utama
+                if (this.id === 'dashboard-link') {
+                    let htmlToDisplay = '';
+                    
+                    // Loop melalui setiap objek dasbor
+                    dashboards.forEach(dash => {
+                        if (dash.url.startsWith('http')) {
+                            const containerHeight = dash.height;
+                            const iframeHeight = containerHeight + 30; // Tambah 30px untuk cropping
+
+                            // Terapkan tinggi sebagai inline style
+                            htmlToDisplay += `
+                                <div class="iframe-container" style="height: ${containerHeight}px;">
+                                    <iframe class="g-sheet-iframe" style="height: ${iframeHeight}px;" src="${dash.url}"></iframe>
+                                </div>
+                            `;
                         }
-                    }
-
-                    // Tutup semua submenu yang terbuka
-                    document.querySelectorAll('.submenu.show').forEach(submenu => {
-                        submenu.classList.remove('show');
                     });
-                });
-            });
+                    contentDisplay.innerHTML = htmlToDisplay;
 
-            // Logika untuk menutup dropdown jika klik di luar
-            window.addEventListener('click', function() {
+                } else { // Jika link lain yang diklik
+                    const url = this.getAttribute('data-src');
+                    if (url && url.startsWith('http')) {
+                        // Untuk menu tunggal, kita bisa pakai tinggi default dari CSS
+                        contentDisplay.innerHTML = `
+                            <div class="iframe-container">
+                                <iframe class="g-sheet-iframe" src="${url}"></iframe>
+                            </div>`;
+                    } else {
+                        contentDisplay.innerHTML = defaultContent;
+                    }
+                }
+
+                // Tutup semua submenu yang terbuka
                 document.querySelectorAll('.submenu.show').forEach(submenu => {
                     submenu.classList.remove('show');
                 });
             });
         });
-    </script>
+
+        // Logika untuk menutup dropdown jika klik di luar
+        window.addEventListener('click', function() {
+            document.querySelectorAll('.submenu.show').forEach(submenu => {
+                submenu.classList.remove('show');
+            });
+        });
+    });
+</script>
 
 </body>
 </html>
