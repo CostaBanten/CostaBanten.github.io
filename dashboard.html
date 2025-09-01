@@ -5,125 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Monitoring</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            background-color: #f4f7f6; 
-            color: #631414; 
-        }
-        .header { 
-            background-color: #051b31; 
-            color: white; 
-            padding: 1px 30px; 
-            text-align: center; 
-        }
-        .header h1 { 
-            margin: 0; 
-            font-size: 24px; 
-        }
-        .navbar { 
-            background-color: #34495e; 
-        }
-        .navbar::after { 
-            content: ""; 
-            display: table; 
-            clear: both; 
-        }
-        .navbar ul { 
-            margin: 0; 
-            padding: 0; 
-            list-style: none; 
-        }
-        .navbar ul li { 
-            float: left; 
-            position: relative; 
-        }
-        .navbar ul li a { 
-            display: block; 
-            color: white; 
-            text-align: center; 
-            padding: 14px 20px; 
-            text-decoration: none; 
-            cursor: pointer; 
-        }
-        .navbar ul li a:hover { 
-            background-color: #8ceb94; 
-        }
-        .dropdown > a::after { 
-            content: ' ▼'; 
-            font-size: 10px; 
-        }
-        .submenu { 
-            display: none; 
-            position: absolute; 
-            background-color: #34495e; 
-            min-width: 200px; 
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
-            z-index: 1; 
-        }
-        .submenu.show { 
-            display: block; 
-        }
-        .submenu li { 
-            float: none; 
-            border-bottom: 1px solid #4a627a; 
-        }
-        .submenu li:last-child { 
-            border-bottom: none; 
-        }
-        #logout-button { 
-            float: right; 
-        }
-        #logout-button a:hover { 
-            background-color: #7af58a; 
-        }
-        .main-content { 
-            padding: 20px; 
-            text-align: center; 
-        }
-        /* === PENGATURAN UTAMA ADA DI SINI === */
-        .iframe-container {
-            width: 70%;
-            height: 250px; /* <-- UBAH ANGKA INI UNTUK MENGATUR TINGGI SEMUA DASBOR */
-            overflow: hidden;
-            border: none;
-            margin-bottom: 16px; /* Ini adalah jarak "1 spasi" antar dasbor */
-            display: inline-block;
-        }
-        .g-sheet-iframe {
-            width: 100%;
-            height: 280px; /* <-- Pastikan angka ini 30px lebih besar dari tinggi di atas */
-            margin-top: -30px;
-            border: none;
-        }
-        /* ===================================== */
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f7f6; color: #333; }
+        .header { background-color: #051b31; color: white; padding: 10px 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .navbar { background-color: #34495e; }
+        .navbar::after { content: ""; display: table; clear: both; }
+        .navbar ul { margin: 0; padding: 0; list-style: none; }
+        .navbar ul li { float: left; position: relative; }
+        .navbar ul li a { display: block; color: white; text-align: center; padding: 14px 20px; text-decoration: none; cursor: pointer; }
+        .navbar ul li a:hover { background-color: #8ceb94; }
+        .dropdown > a::after { content: ' ▼'; font-size: 10px; }
+        .submenu { display: none; position: absolute; background-color: #34495e; min-width: 200px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; }
+        .submenu.show { display: block; }
+        .submenu li { float: none; border-bottom: 1px solid #4a627a; }
+        #logout-button { float: right; }
+        #logout-button a:hover { background-color: #7af58a; }
+        .main-content { padding: 20px; text-align: center; }
+        .iframe-container { display: inline-block; margin-bottom: 20px; border: 1px solid #ddd; overflow: hidden; position: relative; }
+        .g-sheet-iframe { border: none; position: relative; top: -38px; left: 0; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <h1>Live Monitoring Performance Costa Banten</h1><br>
-        <hi>Telkom Akses | My Republic</hi>
+        <h1>Live Monitoring Performance Costa Banten</h1>
+        <p style="color: #ccc; margin: 5px 0 0 0;">Telkom Akses | My Republic</p>
     </header>
 
     <nav class="navbar">
         <ul>
-            <li><a id="dashboard-link" class="nav-link">Dashboard</a></li>
+            <li class="dropdown">
+                <a>Dashboard</a>
+                <ul class="submenu">
+                    <li><a class="nav-link" data-id="Dasbord Onhand">Dasbord Onhand</a></li>
+                    <li><a class="nav-link" data-id="Dasbord ">Dasbord</a></li>
+                </ul>
+            </li>
             
             <li class="dropdown">
                 <a>Telkom Akses</a>
                 <ul class="submenu">
-                    <li><a class="nav-link" data-src="URL_BON_MATERIAL_TA">Bon Matrial</a></li>
-                    <li><a class="nav-link" data-src="URL_ABSENSI_TA">Absensi TA</a></li>
+                    <li><a class="nav-link" data-id="TA Bon Matrial">Bon Matrial</a></li>
+                    <li><a class="nav-link" data-id="TA Absensi">Absensi TA</a></li>
                 </ul>
             </li>
+
             <li class="dropdown">
                 <a>My Republic</a>
                 <ul class="submenu">
-                    <li><a class="nav-link" data-src="URL_BON_MATERIAL_MYREP">Bon Matrial</a></li>
-                    <li><a class="nav-link" data-src="URL_ABSENSI_MYREP">Absensi MYREP</a></li>
+                    <li><a class="nav-link" data-id="MR Bon Matrial">Bon Matrial</a></li>
+                    <li><a class="nav-link" data-id="MR Absensi">Absensi MyRep</a></li>
                 </ul>
             </li>
+
             <li id="logout-button"><a href="index.html">Logout</a></li>
         </ul>
     </nav>
@@ -134,94 +68,105 @@
     </main>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Logika untuk membuka/menutup dropdown (Tidak Berubah)
-        const dropdownToggles = document.querySelectorAll('.dropdown > a');
-        dropdownToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(event) {
-                event.stopPropagation();
-                let submenu = this.nextElementSibling;
-                document.querySelectorAll('.submenu.show').forEach(openSubmenu => {
-                    if (openSubmenu !== submenu) { openSubmenu.classList.remove('show'); }
-                });
-                submenu.classList.toggle('show');
-            });
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // === KONFIGURASI UTAMA ANDA ADA DI SINI ===
+            const dataSources = [
+                {
+                    id: "Dasbord Onhand",
+                    urls: [
+                        "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1409026664&single=true&range=A1:AE26&rm=minimal",
+                        "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1409026664&single=true&range=A27:L46&rm=minimal"
+                    ],
+                    lebar: 1200,
+                    tinggi: 300
+                },
+                {
+                    id: "Dasbord",
+                    urls: ["URL_INDIBIZ_ANDA_DI_SINI"],
+                    lebar: 950,
+                    tinggi: 300
+                },
+                { 
+                    id: "TA Bon Matrial", 
+                    urls: ["URL_BON_MATERIAL_TA_DI_SINI"], 
+                    lebar: 1000, 
+                    tinggi: 600 
+                },
+                
+                // --- KONFIGURASI DI BAWAH INI DITAMBAHKAN KEMBALI ---
+                { 
+                    id: "TA Absensi", 
+                    urls: ["GANTI_DENGAN_URL_ABSENSI_TA"], 
+                    lebar: 800, 
+                    tinggi: 600 
+                },
+                { 
+                    id: "MR Bon Matrial", 
+                    urls: ["GANTI_DENGAN_URL_BON_MATERIAL_MYREP"], 
+                    lebar: 1000, 
+                    tinggi: 600 
+                },
+                { 
+                    id: "MR Absensi", 
+                    urls: ["GANTI_DENGAN_URL_ABSENSI_MYREP"], 
+                    lebar: 800, 
+                    tinggi: 600 
+                }
+                // --------------------------------------------------
+            ];
 
-        // --- Logika Utama untuk Memuat Konten ---
+            // --- Logika Website (Tidak perlu diubah) ---
+            const contentDisplay = document.getElementById('content-display');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const defaultContent = '<h2>Selamat Datang</h2><p>Silakan pilih menu di atas untuk melihat data monitoring</p>';
 
-        // 1. Definisikan URL dan TINGGI untuk setiap dasbor di sini
-        const dashboards = [
-            { 
-                url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=AE1:BI20&rm=minimal", 
-                height: 350 // Atur tinggi untuk dasbor pertama
-            },
-            { 
-                url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=BK1:BV19&rm=minimal", 
-                height: 250 // Atur tinggi untuk dasbor kedua
-            },
-            { 
-                url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKZYmVQgRX8jfxneP54hmlj6yuF6TBi96QQn5qawGZpawq31P1XoZE32TuTJJ6JdcxdLp41G-kNfc-/pubhtml?gid=1951896964&range=A2:C35&rm=minimal", 
-                height: 250 // Atur tinggi untuk dasbor ketiga
-            }
-        ];
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const linkId = this.getAttribute('data-id');
+                    const source = dataSources.find(item => item.id === linkId);
 
-        const contentDisplay = document.getElementById('content-display');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const defaultContent = contentDisplay.innerHTML;
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-
-                // Cek apakah yang diklik adalah link dashboard utama
-                if (this.id === 'dashboard-link') {
-                    let htmlToDisplay = '';
-                    
-                    // Loop melalui setiap objek dasbor
-                    dashboards.forEach(dash => {
-                        if (dash.url.startsWith('http')) {
-                            const containerHeight = dash.height;
-                            const iframeHeight = containerHeight + 30; // Tambah 30px untuk cropping
-
-                            // Terapkan tinggi sebagai inline style
-                            htmlToDisplay += `
-                                <div class="iframe-container" style="height: ${containerHeight}px;">
-                                    <iframe class="g-sheet-iframe" style="height: ${iframeHeight}px;" src="${dash.url}"></iframe>
-                                </div>
-                            `;
-                        }
-                    });
-                    contentDisplay.innerHTML = htmlToDisplay;
-
-                } else { // Jika link lain yang diklik
-                    const url = this.getAttribute('data-src');
-                    if (url && url.startsWith('http')) {
-                        // Untuk menu tunggal, kita bisa pakai tinggi default dari CSS
-                        contentDisplay.innerHTML = `
-                            <div class="iframe-container">
-                                <iframe class="g-sheet-iframe" src="${url}"></iframe>
-                            </div>`;
+                    if (source && source.urls && source.urls.length > 0) {
+                        let htmlToDisplay = '';
+                        source.urls.forEach(url => {
+                            if (url.startsWith('http')) {
+                                const headerHeight = 38;
+                                const footerHeight = 30;
+                                const totalCropping = headerHeight + footerHeight;
+                                const iframeWidth = source.lebar;
+                                const iframeHeight = source.tinggi + totalCropping;
+                                const uniqueUrl = url + '&cacheBust=' + Math.random();
+                                
+                                htmlToDisplay += `
+                                    <div class="iframe-container" style="width: ${iframeWidth}px; height: ${source.tinggi}px;">
+                                        <iframe class="g-sheet-iframe" style="width: ${iframeWidth}px; height: ${iframeHeight}px;" src="${uniqueUrl}"></iframe>
+                                    </div>
+                                `;
+                            }
+                        });
+                        contentDisplay.innerHTML = htmlToDisplay;
                     } else {
                         contentDisplay.innerHTML = defaultContent;
                     }
-                }
-
-                // Tutup semua submenu yang terbuka
-                document.querySelectorAll('.submenu.show').forEach(submenu => {
-                    submenu.classList.remove('show');
+                    document.querySelectorAll('.submenu.show').forEach(submenu => submenu.classList.remove('show'));
                 });
             });
-        });
-
-        // Logika untuk menutup dropdown jika klik di luar
-        window.addEventListener('click', function() {
-            document.querySelectorAll('.submenu.show').forEach(submenu => {
-                submenu.classList.remove('show');
+            
+            const dropdownToggles = document.querySelectorAll('.dropdown > a');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    let submenu = this.nextElementSibling;
+                    document.querySelectorAll('.submenu.show').forEach(openSubmenu => {
+                        if (openSubmenu !== submenu) { openSubmenu.classList.remove('show'); }
+                    });
+                    submenu.classList.toggle('show');
+                });
+            });
+            window.addEventListener('click', function() {
+                document.querySelectorAll('.submenu.show').forEach(submenu => submenu.classList.remove('show'));
             });
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
